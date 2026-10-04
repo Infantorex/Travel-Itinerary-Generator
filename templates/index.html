@@ -1,0 +1,408 @@
+{% extends "headers.html" %}
+
+{% block title %}Voyagr · AI Travel Itinerary & Trip Planner{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Hero Header Section -->
+  <section class="hero-section">
+    <div class="hero-pill-badge">
+      <i class="fa-solid fa-wand-magic-sparkles"></i> Powered by Gemini 2.5 & Live Weather Engine
+    </div>
+    <h1 class="hero-title">
+      Design Your Dream Journey with <br />
+      <span class="gradient-text">AI-Crafted Precision</span>
+    </h1>
+    <p class="hero-subtitle">
+      Generate personalized day-by-day travel itineraries, synchronized meteorological forecasts, local food recommendations, and optimized budget breakdowns in seconds.
+    </p>
+  </section>
+
+  <!-- Main Planner Glass Card -->
+  <div class="glass-card planner-form-card mb-5">
+    <form action="/" method="POST" id="itineraryForm" class="needs-validation" novalidate>
+      <div class="row g-4">
+        <!-- Origin (From) -->
+        <div class="col-md-6">
+          <label for="source" class="form-label-modern">
+            <i class="fa-solid fa-plane-departure text-primary"></i> Departure City (From)
+          </label>
+          <div class="input-icon-wrapper">
+            <i class="fa-solid fa-location-crosshairs"></i>
+            <input
+              type="text"
+              class="form-control-modern"
+              name="source"
+              id="source"
+              placeholder="e.g. Mumbai, Maharashtra, India"
+              required
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-text small text-muted mt-1 ps-1">
+            Format: <span class="text-info">City, State, Country</span>
+          </div>
+        </div>
+
+        <!-- Destination (To) -->
+        <div class="col-md-6">
+          <label for="destination" class="form-label-modern">
+            <i class="fa-solid fa-plane-arrival text-info"></i> Destination (To)
+          </label>
+          <div class="input-icon-wrapper">
+            <i class="fa-solid fa-location-dot"></i>
+            <input
+              type="text"
+              class="form-control-modern"
+              name="destination"
+              id="destination"
+              placeholder="e.g. Paris, Île-de-France, France"
+              required
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-text small text-muted mt-1 ps-1">
+            Format: <span class="text-info">City, State, Country</span>
+          </div>
+        </div>
+
+        <!-- Departure Date -->
+        <div class="col-md-6">
+          <label for="date" class="form-label-modern">
+            <i class="fa-regular fa-calendar-check text-warning"></i> Start Date
+          </label>
+          <div class="input-icon-wrapper">
+            <i class="fa-regular fa-calendar"></i>
+            <input
+              type="date"
+              class="form-control-modern"
+              name="date"
+              id="date"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Return Date -->
+        <div class="col-md-6">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <label for="return" class="form-label-modern mb-0">
+              <i class="fa-regular fa-calendar-xmark text-danger"></i> Return Date
+            </label>
+            <span class="duration-chip" id="durationBadge" style="display: none;">
+              <i class="fa-solid fa-clock"></i> <span id="durationText">0 Days</span>
+            </span>
+          </div>
+          <div class="input-icon-wrapper">
+            <i class="fa-regular fa-calendar-days"></i>
+            <input
+              type="date"
+              class="form-control-modern"
+              name="return"
+              id="return"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Preset Destinations -->
+      <div class="preset-section">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <div class="preset-title mb-0">
+            <i class="fa-solid fa-fire text-danger me-1"></i> Popular Trending Getaways:
+          </div>
+          <span class="small text-muted">Click to auto-fill</span>
+        </div>
+        <div class="preset-pills-wrap">
+          <button type="button" class="preset-pill" data-from="New Delhi, India" data-to="Goa, India" data-days="4">
+            🏝️ Goa, India
+          </button>
+          <button type="button" class="preset-pill" data-from="London, UK" data-to="Paris, France" data-days="5">
+            🗼 Paris, France
+          </button>
+          <button type="button" class="preset-pill" data-from="Singapore" data-to="Tokyo, Japan" data-days="6">
+            🗾 Tokyo, Japan
+          </button>
+          <button type="button" class="preset-pill" data-from="Mumbai, India" data-to="Dubai, UAE" data-days="4">
+            🕌 Dubai, UAE
+          </button>
+          <button type="button" class="preset-pill" data-from="Sydney, Australia" data-to="Bali, Indonesia" data-days="7">
+            🌴 Bali, Indonesia
+          </button>
+          <button type="button" class="preset-pill" data-from="New York, USA" data-to="Rome, Italy" data-days="5">
+            🏛️ Rome, Italy
+          </button>
+          <button type="button" class="preset-pill" data-from="Delhi, India" data-to="Manali, Himachal Pradesh, India" data-days="5">
+            🏔️ Manali, India
+          </button>
+        </div>
+      </div>
+
+      <!-- Submit Action Button -->
+      <div class="mt-4 pt-2 text-center">
+        <button type="submit" class="btn-modern-primary w-100 py-3 fs-5" id="generateBtn">
+          <i class="fa-solid fa-sparkles"></i> Generate AI Itinerary
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Loading Overlay Modal -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-modal-card">
+      <div class="plane-spinner">
+        <div class="spinner-ring"></div>
+        <i class="fa-solid fa-plane-departure plane-icon"></i>
+      </div>
+      <h3 class="fw-bold text-white mb-2">Synthesizing Your Journey...</h3>
+      <p class="text-muted small mb-4" id="loadingQuote">
+        "Travel is the only thing you buy that makes you richer."
+      </p>
+
+      <div class="loading-steps">
+        <div class="step-item active" id="step1">
+          <i class="fa-solid fa-circle-notch fa-spin text-primary"></i>
+          <span>Retrieving meteorological forecast...</span>
+        </div>
+        <div class="step-item" id="step2">
+          <i class="fa-regular fa-circle text-muted"></i>
+          <span>Analyzing top landmarks & hidden attractions...</span>
+        </div>
+        <div class="step-item" id="step3">
+          <i class="fa-regular fa-circle text-muted"></i>
+          <span>Optimizing daily schedule & transport...</span>
+        </div>
+        <div class="step-item" id="step4">
+          <i class="fa-regular fa-circle text-muted"></i>
+          <span>Formatting budget estimates & travel tips...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Highlights & Features Section -->
+  <section class="py-5">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold text-white mb-2">Everything You Need for Effortless Exploration</h2>
+      <p class="text-muted">Designed to take the friction and hours of guesswork out of vacation planning.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <i class="fa-solid fa-cloud-sun-rain"></i>
+          </div>
+          <h3 class="feature-title text-white">Live Weather Intelligence</h3>
+          <p class="feature-desc">
+            Synchronized day-by-day temperatures, precipitation probability, and weather alerts so you pack appropriately and plan around rain.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon-box" style="background: rgba(139, 92, 246, 0.12); border-color: rgba(139, 92, 246, 0.25); color: #a78bfa;">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <h3 class="feature-title text-white">Gemini AI Engine</h3>
+          <p class="feature-desc">
+            Harnesses advanced Google Gemini intelligence with real-world grounding to create realistic, timing-aware sightseeing paths.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon-box" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.25); color: #34d399;">
+            <i class="fa-solid fa-file-pdf"></i>
+          </div>
+          <h3 class="feature-title text-white">100+ Languages & PDF</h3>
+          <p class="feature-desc">
+            Instantly translate your full travel itinerary into any language on-the-fly and download sleek offline PDF travel documents.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="py-4 my-3">
+    <div class="glass-card-subtle p-4 p-md-5">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-4 text-center text-lg-start">
+          <div class="badge-ai mb-2">Simple 3-Step Flow</div>
+          <h3 class="fw-bold text-white mb-3">How Voyagr Works</h3>
+          <p class="text-muted small">
+            Stop juggling 20 open browser tabs. Get a complete, cohesive travel itinerary ready in under 15 seconds.
+          </p>
+        </div>
+        <div class="col-lg-8">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="p-3 rounded-3" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+                <div class="fs-4 fw-bold text-primary mb-1">01</div>
+                <h6 class="text-white fw-bold mb-1">Pick Destination</h6>
+                <p class="text-muted small mb-0">Enter your boarding point, destination, and planned travel dates.</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="p-3 rounded-3" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+                <div class="fs-4 fw-bold text-info mb-1">02</div>
+                <h6 class="text-white fw-bold mb-1">AI Generates Plan</h6>
+                <p class="text-muted small mb-0">AI processes weather conditions, travel routes, budget, and local hotspots.</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="p-3 rounded-3" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+                <div class="fs-4 fw-bold text-success mb-1">03</div>
+                <h6 class="text-white fw-bold mb-1">Export & Explore</h6>
+                <p class="text-muted small mb-0">Translate into your native tongue, export offline PDF, and start traveling!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Setup default minimum dates
+  const today = new Date().toISOString().split('T')[0];
+  const startDateInput = document.getElementById('date');
+  const returnDateInput = document.getElementById('return');
+  const durationBadge = document.getElementById('durationBadge');
+  const durationText = document.getElementById('durationText');
+  const sourceInput = document.getElementById('source');
+  const destInput = document.getElementById('destination');
+  const form = document.getElementById('itineraryForm');
+  const loadingOverlay = document.getElementById('loadingOverlay');
+
+  if (startDateInput && returnDateInput) {
+    startDateInput.min = today;
+    
+    // Set default dates if empty
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const inFiveDays = new Date();
+    inFiveDays.setDate(inFiveDays.getDate() + 5);
+    
+    startDateInput.value = tomorrow.toISOString().split('T')[0];
+    returnDateInput.value = inFiveDays.toISOString().split('T')[0];
+    returnDateInput.min = startDateInput.value;
+
+    function updateDuration() {
+      const s = new Date(startDateInput.value);
+      const r = new Date(returnDateInput.value);
+      if (!isNaN(s) && !isNaN(r) && r >= s) {
+        const diffDays = Math.round((r - s) / (1000 * 60 * 60 * 24)) + 1;
+        durationBadge.style.display = 'inline-flex';
+        durationText.textContent = `${diffDays} Day${diffDays > 1 ? 's' : ''} (${diffDays - 1} Night${diffDays - 1 !== 1 ? 's' : ''})`;
+      } else {
+        durationBadge.style.display = 'none';
+      }
+    }
+
+    startDateInput.addEventListener('change', () => {
+      returnDateInput.min = startDateInput.value;
+      if (returnDateInput.value && returnDateInput.value < startDateInput.value) {
+        returnDateInput.value = startDateInput.value;
+      }
+      updateDuration();
+    });
+
+    returnDateInput.addEventListener('change', updateDuration);
+    updateDuration();
+  }
+
+  // Preset pill clicks
+  document.querySelectorAll('.preset-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      const from = pill.dataset.from;
+      const to = pill.dataset.to;
+      const days = parseInt(pill.dataset.days || '4', 10);
+
+      sourceInput.value = from;
+      destInput.value = to;
+
+      const s = new Date();
+      s.setDate(s.getDate() + 2);
+      const r = new Date();
+      r.setDate(r.getDate() + 2 + (days - 1));
+
+      startDateInput.value = s.toISOString().split('T')[0];
+      returnDateInput.value = r.toISOString().split('T')[0];
+      returnDateInput.min = startDateInput.value;
+      updateDuration();
+
+      destInput.focus();
+    });
+  });
+
+  // Animated loading quote and steps transition
+  const quotes = [
+    '"The world is a book and those who do not travel read only one page." – St. Augustine',
+    '"Traveling – it leaves you speechless, then turns you into a storyteller." – Ibn Battuta',
+    '"Take only memories, leave only footprints." – Chief Seattle',
+    '"Adventure is worthwhile in itself." – Amelia Earhart'
+  ];
+
+  if (form && loadingOverlay) {
+    form.addEventListener('submit', (e) => {
+      if (!form.checkValidity()) {
+        return;
+      }
+      loadingOverlay.style.display = 'flex';
+
+      let quoteIndex = 0;
+      const quoteEl = document.getElementById('loadingQuote');
+      setInterval(() => {
+        quoteIndex = (quoteIndex + 1) % quotes.length;
+        if (quoteEl) quoteEl.textContent = quotes[quoteIndex];
+      }, 3000);
+
+      const step1 = document.getElementById('step1');
+      const step2 = document.getElementById('step2');
+      const step3 = document.getElementById('step3');
+      const step4 = document.getElementById('step4');
+
+      setTimeout(() => {
+        if (step1) {
+          step1.className = 'step-item completed';
+          step1.querySelector('i').className = 'fa-solid fa-circle-check text-success';
+        }
+        if (step2) {
+          step2.className = 'step-item active';
+          step2.querySelector('i').className = 'fa-solid fa-circle-notch fa-spin text-primary';
+        }
+      }, 1500);
+
+      setTimeout(() => {
+        if (step2) {
+          step2.className = 'step-item completed';
+          step2.querySelector('i').className = 'fa-solid fa-circle-check text-success';
+        }
+        if (step3) {
+          step3.className = 'step-item active';
+          step3.querySelector('i').className = 'fa-solid fa-circle-notch fa-spin text-primary';
+        }
+      }, 3500);
+
+      setTimeout(() => {
+        if (step3) {
+          step3.className = 'step-item completed';
+          step3.querySelector('i').className = 'fa-solid fa-circle-check text-success';
+        }
+        if (step4) {
+          step4.className = 'step-item active';
+          step4.querySelector('i').className = 'fa-solid fa-circle-notch fa-spin text-primary';
+        }
+      }, 5500);
+    });
+  }
+</script>
+{% endblock %}

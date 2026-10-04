@@ -1,0 +1,151 @@
+{% extends "headers.html" %}
+
+{% block title %}About Voyagr · AI Travel Intelligence{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <!-- Hero Section -->
+  <div class="text-center max-w-700 mx-auto mb-5">
+    <div class="hero-pill-badge mb-3">
+      <i class="fa-solid fa-sparkles"></i> Our Story & Technology
+    </div>
+    <h1 class="display-4 fw-bold text-white mb-3">
+      Reimagining How the World <br />
+      <span class="gradient-text">Explores & Journeys</span>
+    </h1>
+    <p class="hero-subtitle">
+      Voyagr was built on a simple conviction: planning a trip should be just as exhilarating, seamless, and inspiring as the journey itself.
+    </p>
+  </div>
+
+  <!-- Mission & Vision Cards -->
+  <div class="row g-4 mb-5">
+    <div class="col-lg-6">
+      <div class="glass-card h-100 p-4 p-md-5">
+        <div class="feature-icon-box" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">
+          <i class="fa-solid fa-bullseye"></i>
+        </div>
+        <h3 class="fw-bold text-white mb-3">Our Core Mission</h3>
+        <p class="text-muted leading-relaxed">
+          Traditional trip planning often involves dozens of fragmented tabs, outdated blog posts, conflicting transit schedules, and unexpected weather surprises. Voyagr unifies meteorological forecasting, real-time attraction data, and artificial intelligence into a single intuitive command center.
+        </p>
+        <p class="text-muted mb-0">
+          Whether you are embarking on a solo backpacker quest through Southeast Asia, a family road trip across Europe, or a luxury weekend retreat, our engine tailors every hour to your destination and timeline.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="glass-card h-100 p-4 p-md-5">
+        <div class="feature-icon-box" style="background: rgba(236, 72, 153, 0.15); color: #f472b6;">
+          <i class="fa-solid fa-microchip"></i>
+        </div>
+        <h3 class="fw-bold text-white mb-3">Next-Gen Architecture</h3>
+        <p class="text-muted leading-relaxed">
+          At the heart of Voyagr lies Google Gemini 2.5 augmented with search grounding and contextual prompting. It factors in realistic transfer times, local dining gems, cultural etiquettes, and practical INR budgeting.
+        </p>
+        <p class="text-muted mb-0">
+          Coupled with Visual Crossing Weather intelligence, our platform delivers localized temperature predictions and precipitation alerts so you're never caught off-guard.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Technology Highlights -->
+  <div class="mb-5">
+    <div class="text-center mb-4">
+      <h2 class="fw-bold text-white mb-2">Core Technology Stack</h2>
+      <p class="text-muted">Built with robust, modern web standards for lightning-fast responsiveness.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-3 col-sm-6">
+        <div class="glass-card-subtle p-4 text-center h-100">
+          <i class="fa-solid fa-brain fs-1 text-primary mb-3"></i>
+          <h5 class="text-white fw-bold mb-2">Google Gemini 2.5</h5>
+          <p class="text-muted small mb-0">Grounding intelligence and contextual itinerary drafting.</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="glass-card-subtle p-4 text-center h-100">
+          <i class="fa-solid fa-cloud-sun-rain fs-1 text-info mb-3"></i>
+          <h5 class="text-white fw-bold mb-2">Visual Crossing</h5>
+          <p class="text-muted small mb-0">High-precision meteorological data and condition forecasting.</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="glass-card-subtle p-4 text-center h-100">
+          <i class="fa-solid fa-language fs-1 text-warning mb-3"></i>
+          <h5 class="text-white fw-bold mb-2">Deep Translator</h5>
+          <p class="text-muted small mb-0">Chunked multilingual translation across 100+ worldwide tongues.</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="glass-card-subtle p-4 text-center h-100">
+          <i class="fa-solid fa-file-pdf fs-1 text-danger mb-3"></i>
+          <h5 class="text-white fw-bold mb-2">Client PDF Engine</h5>
+          <p class="text-muted small mb-0">Pixel-perfect offline export ready for printing and mobile storage.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Frequently Asked Questions Accordion -->
+  <div class="glass-card p-4 p-md-5 mb-5">
+    <div class="text-center mb-4">
+      <h3 class="fw-bold text-white mb-2">Frequently Asked Questions</h3>
+      <p class="text-muted">Quick answers to common questions about Voyagr AI.</p>
+    </div>
+
+    <div class="accordion accordion-flush" id="faqAccordion">
+      <div class="accordion-item bg-transparent border-bottom border-secondary border-opacity-25">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed bg-transparent text-white fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+            How accurate are the daily itineraries generated?
+          </button>
+        </h2>
+        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body text-muted small">
+            Voyagr uses Gemini AI with real-time Google search grounding to reference active landmarks, optimal visit times, and realistic travel routes. However, we always recommend verifying museum opening times on local public holidays.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item bg-transparent border-bottom border-secondary border-opacity-25">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed bg-transparent text-white fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+            Can I export my plan for offline travel?
+          </button>
+        </h2>
+        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body text-muted small">
+            Yes! Click the <strong>Export PDF</strong> button on the dashboard to generate a clean, formatted travel document that you can save to your phone, tablet, or print on paper.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item bg-transparent border-bottom border-secondary border-opacity-25">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed bg-transparent text-white fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+            Is Voyagr free to use?
+          </button>
+        </h2>
+        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body text-muted small">
+            Yes, Voyagr is completely free to use for planning domestic and international travel trips.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Call To Action Banner -->
+  <div class="glass-card-subtle p-5 text-center" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%); border-color: rgba(59, 130, 246, 0.3);">
+    <h3 class="fw-bold text-white mb-2">Ready to Design Your Next Expedition?</h3>
+    <p class="text-muted mb-4">Start generating personalized daily itineraries with live weather syncing right now.</p>
+    <a href="/" class="btn-modern-primary py-3 px-5 fs-5">
+      <i class="fa-solid fa-sparkles"></i> Launch Planner
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "headers.html" %}
+
+{% block title %}Login · Voyagr AI{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon-badge">
+        <i class="fa-solid fa-compass"></i>
+      </div>
+      <h2 class="fw-bold text-white mb-1">Welcome Back</h2>
+      <p class="text-muted small">Access your personalized travel itineraries and trip history.</p>
+    </div>
+
+    <form action="/login" method="POST" id="loginForm">
+      <!-- Email input -->
+      <div class="mb-4">
+        <label for="email" class="form-label-modern">
+          <i class="fa-regular fa-envelope text-primary"></i> Email Address
+        </label>
+        <div class="input-icon-wrapper">
+          <i class="fa-solid fa-envelope"></i>
+          <input
+            type="email"
+            class="form-control-modern"
+            name="email"
+            id="email"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          />
+        </div>
+      </div>
+
+      <!-- Password input -->
+      <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <label for="password" class="form-label-modern mb-0">
+            <i class="fa-solid fa-lock text-warning"></i> Password
+          </label>
+        </div>
+        <div class="input-icon-wrapper">
+          <i class="fa-solid fa-lock"></i>
+          <input
+            type="password"
+            class="form-control-modern pe-5"
+            name="password"
+            id="password"
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+          />
+          <button type="button" class="btn border-0 text-muted position-absolute end-0 me-2" id="togglePasswordBtn" style="z-index: 5;" aria-label="Toggle password visibility">
+            <i class="fa-regular fa-eye" id="togglePasswordIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn-modern-primary w-100 py-3 mb-4">
+        <i class="fa-solid fa-right-to-bracket"></i> Sign In to Voyagr
+      </button>
+
+      <!-- Register link -->
+      <div class="text-center">
+        <p class="text-muted small mb-0">
+          Don't have an account?
+          <a href="/register" class="text-info text-decoration-none fw-semibold">Create one now</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const toggleBtn = document.getElementById('togglePasswordBtn');
+  const passwordInput = document.getElementById('password');
+  const toggleIcon = document.getElementById('togglePasswordIcon');
+
+  if (toggleBtn && passwordInput && toggleIcon) {
+    toggleBtn.addEventListener('click', () => {
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.className = 'fa-regular fa-eye-slash text-info';
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.className = 'fa-regular fa-eye text-muted';
+      }
+    });
+  }
+</script>
+{% endblock %}

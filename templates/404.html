@@ -1,0 +1,26 @@
+{% extends "headers.html" %}
+
+{% block title %}404 - Page Not Found · Voyagr AI{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 65vh;">
+  <div class="glass-card p-5 max-w-600 mx-auto">
+    <div class="brand-icon mx-auto mb-4" style="width: 80px; height: 80px; font-size: 2.2rem; background: var(--accent-gradient);">
+      <i class="fa-solid fa-map-location-dot"></i>
+    </div>
+    <div class="display-1 fw-bold gradient-text mb-2">404</div>
+    <h2 class="fw-bold text-white mb-3">Off the Map! Destination Not Found</h2>
+    <p class="text-muted mb-4">
+      It seems like the coordinates you are looking for don't exist or have moved to a new route. Let's get you back on track.
+    </p>
+    <div class="d-flex flex-wrap gap-3 justify-content-center">
+      <a href="/" class="btn-modern-primary py-2 px-4">
+        <i class="fa-solid fa-house"></i> Return to Home Planner
+      </a>
+      <a href="/about" class="btn-modern-secondary py-2 px-4">
+        <i class="fa-solid fa-circle-info"></i> About Project
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

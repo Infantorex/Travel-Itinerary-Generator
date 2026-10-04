@@ -1,0 +1,143 @@
+{% extends "headers.html" %}
+
+{% block title %}Register · Voyagr AI{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon-badge" style="background: var(--accent-gradient);">
+        <i class="fa-solid fa-user-plus"></i>
+      </div>
+      <h2 class="fw-bold text-white mb-1">Create Account</h2>
+      <p class="text-muted small">Join thousands of travelers crafting smarter itineraries with AI.</p>
+    </div>
+
+    <form action="/register" method="POST" id="registerForm">
+      <!-- Full Name -->
+      <div class="mb-3">
+        <label for="name" class="form-label-modern">
+          <i class="fa-regular fa-user text-primary"></i> Full Name
+        </label>
+        <div class="input-icon-wrapper">
+          <i class="fa-solid fa-user"></i>
+          <input
+            type="text"
+            class="form-control-modern"
+            name="name"
+            id="name"
+            placeholder="John Doe"
+            required
+            autocomplete="name"
+          />
+        </div>
+      </div>
+
+      <!-- Email Address -->
+      <div class="mb-3">
+        <label for="email" class="form-label-modern">
+          <i class="fa-regular fa-envelope text-info"></i> Email Address
+        </label>
+        <div class="input-icon-wrapper">
+          <i class="fa-solid fa-envelope"></i>
+          <input
+            type="email"
+            class="form-control-modern"
+            name="email"
+            id="email"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          />
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="form-label-modern">
+          <i class="fa-solid fa-lock text-warning"></i> Password
+        </label>
+        <div class="input-icon-wrapper">
+          <i class="fa-solid fa-lock"></i>
+          <input
+            type="password"
+            class="form-control-modern"
+            name="password"
+            id="password"
+            placeholder="At least 6 characters"
+            required
+            minlength="6"
+            autocomplete="new-password"
+          />
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="mb-4">
+        <label for="password2" class="form-label-modern">
+          <i class="fa-solid fa-shield-halved text-success"></i> Confirm Password
+        </label>
+        <div class="input-icon-wrapper">
+          <i class="fa-solid fa-shield-halved"></i>
+          <input
+            type="password"
+            class="form-control-modern"
+            name="password2"
+            id="password2"
+            placeholder="Re-enter your password"
+            required
+            autocomplete="new-password"
+          />
+        </div>
+        <div id="passwordMismatch" class="text-danger small mt-1" style="display: none;">
+          <i class="fa-solid fa-circle-exclamation me-1"></i> Passwords do not match.
+        </div>
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn-modern-primary w-100 py-3 mb-4" id="submitRegBtn">
+        <i class="fa-solid fa-user-check"></i> Complete Registration
+      </button>
+
+      <!-- Login link -->
+      <div class="text-center">
+        <p class="text-muted small mb-0">
+          Already have an account?
+          <a href="/login" class="text-info text-decoration-none fw-semibold">Sign In here</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const form = document.getElementById('registerForm');
+  const pass1 = document.getElementById('password');
+  const pass2 = document.getElementById('password2');
+  const mismatchAlert = document.getElementById('passwordMismatch');
+
+  function validatePasswords() {
+    if (pass2.value && pass1.value !== pass2.value) {
+      mismatchAlert.style.display = 'block';
+      pass2.style.borderColor = '#ef4444';
+      return false;
+    } else {
+      mismatchAlert.style.display = 'none';
+      pass2.style.borderColor = '';
+      return true;
+    }
+  }
+
+  pass1.addEventListener('input', validatePasswords);
+  pass2.addEventListener('input', validatePasswords);
+
+  form.addEventListener('submit', (e) => {
+    if (!validatePasswords()) {
+      e.preventDefault();
+      pass2.focus();
+    }
+  });
+</script>
+{% endblock %}
