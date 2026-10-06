@@ -13,10 +13,29 @@ load_dotenv()
 api_key = os.environ.get("WEATHER_API_KEY")
 secret_key = os.environ.get("SECRET_KEY", "voyagr-travel-generator-secret-2026")
 
-# Initialize the app
-app = Flask(__name__)
+# Initialize base directories for reliable template/static resolution on Vercel & local
+base_dir = os.path.dirname(os.path.abspath(__file__))
+app = Flask(
+    __name__,
+    template_folder=os.path.join(base_dir, 'templates'),
+    static_folder=os.path.join(base_dir, 'static')
+)
 sitemapper = Sitemapper(app=app) # Create and initialize the sitemapper
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+
+# Database configuration: support DATABASE_URL, Vercel /tmp, or local SQLite
+is_vercel = bool(os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"))
+database_url = os.environ.get("DATABASE_URL")
+
+if database_url:
+    # Handle postgres:// to postgresql:// for modern SQLAlchemy
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+elif is_vercel:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/database.db'
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 app.secret_key = secret_key
@@ -38,7 +57,10 @@ class User(db.Model):
 
 
 with app.app_context():
-    db.create_all()
+    try:
+        db.create_all()
+    except Exception as e:
+        print(f"DB init warning: {e}")
 
 @app.after_request
 def add_csp_header(response):
