@@ -90,28 +90,28 @@ with app.app_context():
     except Exception as e:
         print(f"Database initialization notice: {e}")
 
+from flask import send_from_directory
+
+@app.route('/static/<path:filename>')
+def custom_static(filename):
+    static_dir = os.path.join(base_dir, 'static')
+    if os.path.exists(os.path.join(static_dir, filename)):
+        return send_from_directory(static_dir, filename)
+    public_dir = os.path.join(base_dir, 'public')
+    if os.path.exists(os.path.join(public_dir, filename)):
+        return send_from_directory(public_dir, filename)
+    return ("File not found", 404)
+
 @app.after_request
 def add_csp_header(response):
     csp = (
-        "default-src 'self'; "
-        # Allow external scripts like FontAwesome, Bootstrap, EmailJS, markdown-it, html2pdf
-        "script-src 'self' 'unsafe-inline' https://kit.fontawesome.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://emailjs.com; "
-        # Allow inline styles and external stylesheets (Bootstrap, FontAwesome, Google Fonts)
-        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; "
-        # Allow fonts from Google Fonts and jsDelivr
-        "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
-        # Allow images from same origin, data URIs, and Unsplash
-        "img-src 'self' data: https://images.unsplash.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
-        # Allow external connections for emailjs, translator
-        "connect-src 'self' https://emailjs.com https://api.emailjs.com; "
-        "frame-src 'none'; "
-        "object-src 'none'; "
-        "base-uri 'self'; "
-        "form-action 'self'; "
-        "frame-ancestors 'none'; "
-        "manifest-src 'self'; "
-        "media-src 'self'; "
-        "worker-src 'self'; "
+        "default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; "
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; "
+        "style-src 'self' 'unsafe-inline' https:; "
+        "font-src 'self' https: data:; "
+        "img-src 'self' data: blob: https:; "
+        "connect-src 'self' https:; "
+        "media-src 'self' https: data: blob:; "
     )
     response.headers['Content-Security-Policy'] = csp
     return response
