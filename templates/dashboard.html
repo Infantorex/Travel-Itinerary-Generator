@@ -405,5 +405,10 @@
       resetLangBtn.style.display = "none";
     });
   }
+
+  // Set scenic backdrop matching itinerary destination
+  if (window.autoDetectTravelTheme) {
+    window.autoDetectTravelTheme("{{ destination }}");
+  }
 </script>
 {% endblock %}

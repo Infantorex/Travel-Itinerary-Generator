@@ -28,10 +28,89 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}" />
   </head>
-  <body>
-    <!-- Ambient Background Glows -->
-    <div class="ambient-glow-1"></div>
-    <div class="ambient-glow-2"></div>
+    <!-- Immersive Travel Background System -->
+    <div class="travel-bg-container" id="travelBgContainer">
+      <!-- High-Definition Scenic Travel Slides with Ambient Pan/Zoom -->
+      <div class="travel-bg-slide bg-global active" id="bgSlideGlobal" data-theme="global" style="background-image: url('{{ url_for('static', filename='bg-travel-global.jpg') }}');"></div>
+      <div class="travel-bg-slide bg-europe" id="bgSlideEurope" data-theme="europe" style="background-image: url('{{ url_for('static', filename='bg-travel-europe.jpg') }}');"></div>
+      <div class="travel-bg-slide bg-tropical" id="bgSlideTropical" data-theme="tropical" style="background-image: url('{{ url_for('static', filename='bg-travel-tropical.jpg') }}');"></div>
+      <div class="travel-bg-slide bg-asia" id="bgSlideAsia" data-theme="asia" style="background-image: url('{{ url_for('static', filename='bg-travel-asia.jpg') }}');"></div>
+
+      <!-- Dynamic World Map Flight Trajectories & Animated Route Network -->
+      <div class="travel-routes-overlay">
+        <svg class="flight-routes-svg" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="flightGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8" />
+              <stop offset="50%" stop-color="#818cf8" stop-opacity="1" />
+              <stop offset="100%" stop-color="#f43f5e" stop-opacity="0.9" />
+            </linearGradient>
+            <linearGradient id="flightGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#34d399" stop-opacity="0.8" />
+              <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.9" />
+            </linearGradient>
+            <filter id="glowEffect" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+
+          <!-- Latitude/Longitude Coordinates Grid -->
+          <g class="world-grid-lines" opacity="0.12">
+            <line x1="0" y1="200" x2="1440" y2="200" stroke="#38bdf8" stroke-dasharray="4 8" stroke-width="0.75" />
+            <line x1="0" y1="400" x2="1440" y2="400" stroke="#38bdf8" stroke-dasharray="4 8" stroke-width="0.75" />
+            <line x1="0" y1="600" x2="1440" y2="600" stroke="#38bdf8" stroke-dasharray="4 8" stroke-width="0.75" />
+            <line x1="288" y1="0" x2="288" y2="800" stroke="#38bdf8" stroke-dasharray="4 8" stroke-width="0.75" />
+            <line x1="576" y1="0" x2="576" y2="800" stroke="#38bdf8" stroke-dasharray="4 8" stroke-width="0.75" />
+            <line x1="864" y1="0" x2="864" y2="800" stroke="#38bdf8" stroke-dasharray="4 8" stroke-width="0.75" />
+            <line x1="1152" y1="0" x2="1152" y2="800" stroke="#38bdf8" stroke-dasharray="4 8" stroke-width="0.75" />
+          </g>
+
+          <!-- Animated Flight Route Arcs -->
+          <path class="flight-arc arc-1" d="M 220,340 Q 460,140 700,260" fill="none" stroke="url(#flightGrad1)" stroke-width="2" stroke-dasharray="6,6" />
+          <path class="flight-arc arc-2" d="M 700,260 Q 940,160 1180,320" fill="none" stroke="url(#flightGrad1)" stroke-width="2" stroke-dasharray="6,6" />
+          <path class="flight-arc arc-3" d="M 980,420 Q 1120,560 1280,590" fill="none" stroke="url(#flightGrad2)" stroke-width="2" stroke-dasharray="6,6" />
+          <path class="flight-arc arc-4" d="M 220,340 Q 560,520 980,420" fill="none" stroke="url(#flightGrad2)" stroke-width="1.5" stroke-dasharray="4,6" />
+
+          <!-- Waypoint Beacons (Pulsing Global Hubs) -->
+          <g class="waypoint-node" transform="translate(220, 340)">
+            <circle r="14" fill="#38bdf8" opacity="0.25" class="beacon-pulse" />
+            <circle r="4" fill="#38bdf8" filter="url(#glowEffect)" />
+          </g>
+          <g class="waypoint-node" transform="translate(700, 260)">
+            <circle r="16" fill="#818cf8" opacity="0.25" class="beacon-pulse" />
+            <circle r="4.5" fill="#818cf8" filter="url(#glowEffect)" />
+          </g>
+          <g class="waypoint-node" transform="translate(980, 420)">
+            <circle r="18" fill="#f43f5e" opacity="0.25" class="beacon-pulse" />
+            <circle r="5" fill="#f43f5e" filter="url(#glowEffect)" />
+          </g>
+          <g class="waypoint-node" transform="translate(1180, 320)">
+            <circle r="15" fill="#34d399" opacity="0.25" class="beacon-pulse" />
+            <circle r="4" fill="#34d399" filter="url(#glowEffect)" />
+          </g>
+          <g class="waypoint-node" transform="translate(1280, 590)">
+            <circle r="13" fill="#38bdf8" opacity="0.25" class="beacon-pulse" />
+            <circle r="3.5" fill="#38bdf8" filter="url(#glowEffect)" />
+          </g>
+        </svg>
+      </div>
+
+      <!-- Floating Animated Airplanes / Journey Motifs -->
+      <div class="travel-floating-plane plane-1"><i class="fa-solid fa-plane-up"></i></div>
+      <div class="travel-floating-plane plane-2"><i class="fa-solid fa-paper-plane"></i></div>
+      <div class="travel-floating-plane plane-3"><i class="fa-solid fa-plane"></i></div>
+
+      <!-- Rotating Compass Rose Watermark -->
+      <div class="travel-compass-watermark">
+        <i class="fa-regular fa-compass"></i>
+      </div>
+
+      <!-- Ambient Glow Orbs & Multi-stop Depth Vignette -->
+      <div class="ambient-glow-1"></div>
+      <div class="ambient-glow-2"></div>
+      <div class="travel-vignette-overlay"></div>
+    </div>
 
     <!-- Flash Message Toasts -->
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -189,11 +268,152 @@
       </div>
     </footer>
 
+    <!-- Floating Travel Backdrop Mood Selector Widget -->
+    <div class="travel-theme-widget" id="travelThemeWidget">
+      <div class="travel-widget-header">
+        <i class="fa-solid fa-earth-americas text-info"></i>
+        <span>Scenic Backdrop</span>
+      </div>
+      <div class="travel-widget-pills">
+        <button class="theme-pill-btn active" data-theme="global" type="button" title="Global Wonders & Mountain Panorama">
+          ✨ Wonders
+        </button>
+        <button class="theme-pill-btn" data-theme="europe" type="button" title="European Twilight Landmarks">
+          🗼 Europe
+        </button>
+        <button class="theme-pill-btn" data-theme="tropical" type="button" title="Tropical Island Lagoon">
+          🏝️ Tropical
+        </button>
+        <button class="theme-pill-btn" data-theme="asia" type="button" title="Mount Fuji & Pagoda Sunrise">
+          🌸 Asia
+        </button>
+        <button class="theme-pill-btn cycle-pill-btn" id="autoCycleBtn" type="button" title="Toggle Auto-Cycle Scenery">
+          <i class="fa-solid fa-play" id="autoCycleIcon"></i> Auto
+        </button>
+      </div>
+    </div>
+
     <!-- Bootstrap 5 Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-    <!-- Global Interactions Script -->
+    <!-- Global Travel Background & UI Script -->
     <script>
+      // ==========================================
+      // Travel Background Management Engine
+      // ==========================================
+      (function() {
+        const slides = {
+          global: document.getElementById('bgSlideGlobal'),
+          europe: document.getElementById('bgSlideEurope'),
+          tropical: document.getElementById('bgSlideTropical'),
+          asia: document.getElementById('bgSlideAsia')
+        };
+        const themePills = document.querySelectorAll('.theme-pill-btn[data-theme]');
+        const autoCycleBtn = document.getElementById('autoCycleBtn');
+        const autoCycleIcon = document.getElementById('autoCycleIcon');
+        const themesList = ['global', 'europe', 'tropical', 'asia'];
+        let currentTheme = localStorage.getItem('voyagr_travel_theme') || 'global';
+        let autoCycleInterval = null;
+        let isAutoCycling = localStorage.getItem('voyagr_auto_cycle') === 'true';
+
+        window.setTravelTheme = function(themeName, persist = true) {
+          if (!slides[themeName]) themeName = 'global';
+          currentTheme = themeName;
+          if (persist) {
+            localStorage.setItem('voyagr_travel_theme', themeName);
+          }
+
+          Object.keys(slides).forEach(key => {
+            if (slides[key]) {
+              if (key === themeName) {
+                slides[key].classList.add('active');
+              } else {
+                slides[key].classList.remove('active');
+              }
+            }
+          });
+
+          themePills.forEach(pill => {
+            if (pill.getAttribute('data-theme') === themeName) {
+              pill.classList.add('active');
+            } else {
+              pill.classList.remove('active');
+            }
+          });
+        };
+
+        // Destination keyword detection
+        window.autoDetectTravelTheme = function(destinationText) {
+          if (!destinationText || isAutoCycling) return;
+          const text = destinationText.toLowerCase();
+
+          if (text.includes('paris') || text.includes('rome') || text.includes('italy') || text.includes('france') || 
+              text.includes('london') || text.includes('uk') || text.includes('venice') || text.includes('europe') || 
+              text.includes('barcelona') || text.includes('spain') || text.includes('amsterdam') || text.includes('greece') || 
+              text.includes('santorini') || text.includes('switzerland') || text.includes('vienna') || text.includes('prague')) {
+            window.setTravelTheme('europe', false);
+          } else if (text.includes('goa') || text.includes('bali') || text.includes('maldives') || text.includes('hawaii') || 
+                     text.includes('phuket') || text.includes('thailand') || text.includes('beach') || text.includes('island') || 
+                     text.includes('mauritius') || text.includes('seychelles') || text.includes('bahamas') || text.includes('cancun')) {
+            window.setTravelTheme('tropical', false);
+          } else if (text.includes('tokyo') || text.includes('japan') || text.includes('kyoto') || text.includes('fuji') || 
+                     text.includes('seoul') || text.includes('korea') || text.includes('singapore') || text.includes('asia') || 
+                     text.includes('vietnam') || text.includes('china') || text.includes('hong kong') || text.includes('taiwan')) {
+            window.setTravelTheme('asia', false);
+          } else {
+            window.setTravelTheme('global', false);
+          }
+        };
+
+        // Theme selector click events
+        themePills.forEach(pill => {
+          pill.addEventListener('click', () => {
+            if (isAutoCycling) {
+              toggleAutoCycle(false);
+            }
+            const theme = pill.getAttribute('data-theme');
+            window.setTravelTheme(theme);
+          });
+        });
+
+        function toggleAutoCycle(enable) {
+          isAutoCycling = enable;
+          localStorage.setItem('voyagr_auto_cycle', isAutoCycling);
+          if (isAutoCycling) {
+            if (autoCycleIcon) {
+              autoCycleIcon.className = 'fa-solid fa-pause';
+            }
+            autoCycleBtn.classList.add('active');
+            let idx = themesList.indexOf(currentTheme);
+            autoCycleInterval = setInterval(() => {
+              idx = (idx + 1) % themesList.length;
+              window.setTravelTheme(themesList[idx], false);
+            }, 9000);
+          } else {
+            if (autoCycleIcon) {
+              autoCycleIcon.className = 'fa-solid fa-play';
+            }
+            autoCycleBtn.classList.remove('active');
+            if (autoCycleInterval) {
+              clearInterval(autoCycleInterval);
+              autoCycleInterval = null;
+            }
+          }
+        }
+
+        if (autoCycleBtn) {
+          autoCycleBtn.addEventListener('click', () => {
+            toggleAutoCycle(!isAutoCycling);
+          });
+        }
+
+        // Initialize saved theme or state
+        window.setTravelTheme(currentTheme, false);
+        if (isAutoCycling) {
+          toggleAutoCycle(true);
+        }
+      })();
+
       // Auto dismiss flash messages after 6 seconds
       setTimeout(() => {
         const toasts = document.querySelectorAll('.toast-custom');

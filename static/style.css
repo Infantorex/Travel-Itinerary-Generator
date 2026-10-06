@@ -75,24 +75,237 @@ body {
   flex-direction: column;
   overflow-x: hidden;
   position: relative;
-  background-image: 
-    radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 85% 25%, rgba(139, 92, 246, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 50% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
-  background-attachment: fixed;
 }
 
-/* Background Ambient Orbs */
+/* ==========================================================================
+   Immersive Travel Background System (Dynamic Scenery & Vector Routes)
+   ========================================================================== */
+.travel-bg-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+  background-color: #070a13;
+}
+
+/* Scenic HD Background Slides with Ken-Burns Ambient Motion */
+.travel-bg-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1), transform 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.travel-bg-slide.active {
+  opacity: 0.85;
+  transform: scale(1);
+  animation: ambientKenBurns 32s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+}
+
+@keyframes ambientKenBurns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    transform: scale(1.05) translate(-1.2%, -0.8%);
+  }
+  100% {
+    transform: scale(1.02) translate(1%, 1.2%);
+  }
+}
+
+/* Vector Flight Route Overlay */
+.travel-routes-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.65;
+  z-index: 2;
+}
+
+.flight-routes-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.flight-arc {
+  animation: dashFlight 24s linear infinite;
+}
+
+.flight-arc.arc-2 {
+  animation-duration: 28s;
+  animation-direction: reverse;
+}
+
+.flight-arc.arc-3 {
+  animation-duration: 34s;
+}
+
+.flight-arc.arc-4 {
+  animation-duration: 40s;
+  animation-direction: reverse;
+}
+
+@keyframes dashFlight {
+  from {
+    stroke-dashoffset: 300;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.beacon-pulse {
+  animation: beaconPulse 2.8s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  transform-origin: center;
+}
+
+@keyframes beaconPulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+/* Floating Planes Across Sky */
+.travel-floating-plane {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.8));
+  pointer-events: none;
+  z-index: 3;
+}
+
+.plane-1 {
+  top: 18%;
+  left: -80px;
+  animation: flyAcross1 26s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.plane-2 {
+  top: 55%;
+  right: -80px;
+  font-size: 1rem;
+  color: rgba(244, 114, 182, 0.55);
+  animation: flyAcross2 35s cubic-bezier(0.4, 0, 0.2, 1) infinite 7s;
+}
+
+.plane-3 {
+  top: 75%;
+  left: -80px;
+  font-size: 0.95rem;
+  color: rgba(52, 211, 153, 0.5);
+  animation: flyAcross3 32s cubic-bezier(0.4, 0, 0.2, 1) infinite 15s;
+}
+
+@keyframes flyAcross1 {
+  0% {
+    transform: translate(0, 0) rotate(20deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.9;
+  }
+  92% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(115vw, -140px) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+@keyframes flyAcross2 {
+  0% {
+    transform: translate(0, 0) rotate(-155deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.8;
+  }
+  92% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-115vw, 110px) rotate(-155deg);
+    opacity: 0;
+  }
+}
+
+@keyframes flyAcross3 {
+  0% {
+    transform: translate(0, 0) rotate(12deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.75;
+  }
+  92% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate(115vw, 160px) rotate(12deg);
+    opacity: 0;
+  }
+}
+
+/* Rotating Compass Rose Watermark */
+.travel-compass-watermark {
+  position: absolute;
+  bottom: -100px;
+  right: -80px;
+  font-size: 380px;
+  color: rgba(255, 255, 255, 0.03);
+  pointer-events: none;
+  z-index: 1;
+  animation: rotateCompass 160s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes rotateCompass {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Ambient Glow Orbs */
 .ambient-glow-1 {
   position: absolute;
   top: -120px;
   left: 20%;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0) 70%);
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.22) 0%, rgba(59, 130, 246, 0) 70%);
   pointer-events: none;
-  z-index: 0;
-  filter: blur(50px);
+  z-index: 1;
+  filter: blur(60px);
   animation: floatOrb 14s ease-in-out infinite alternate;
 }
 
@@ -100,18 +313,132 @@ body {
   position: absolute;
   top: 400px;
   right: 10%;
-  width: 450px;
-  height: 450px;
-  background: radial-gradient(circle, rgba(236, 72, 153, 0.1) 0%, rgba(236, 72, 153, 0) 70%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.18) 0%, rgba(236, 72, 153, 0) 70%);
   pointer-events: none;
-  z-index: 0;
-  filter: blur(60px);
+  z-index: 1;
+  filter: blur(70px);
   animation: floatOrb 18s ease-in-out infinite alternate-reverse;
 }
 
 @keyframes floatOrb {
   0% { transform: translate(0, 0) scale(1); }
   100% { transform: translate(40px, 60px) scale(1.1); }
+}
+
+/* Deep Vignette Layer for Razor-Sharp Readability */
+.travel-vignette-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 35%, rgba(7, 10, 19, 0.55) 0%, rgba(7, 10, 19, 0.8) 65%, rgba(7, 10, 19, 0.94) 100%),
+    linear-gradient(180deg, rgba(7, 10, 19, 0.72) 0%, rgba(7, 10, 19, 0.45) 30%, rgba(7, 10, 19, 0.6) 70%, rgba(7, 10, 19, 0.92) 100%);
+}
+
+/* ==========================================================================
+   Floating Travel Theme Mood Selector Widget
+   ========================================================================== */
+.travel-theme-widget {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 990;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-pill);
+  padding: 6px 10px 6px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 20px rgba(59, 130, 246, 0.15);
+  transition: all var(--transition-normal);
+}
+
+.travel-theme-widget:hover {
+  border-color: rgba(59, 130, 246, 0.45);
+  background: rgba(15, 23, 42, 0.92);
+  box-shadow: 0 12px 35px -5px rgba(0, 0, 0, 0.8), 0 0 25px rgba(59, 130, 246, 0.3);
+}
+
+.travel-widget-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  padding-right: 10px;
+  user-select: none;
+}
+
+.travel-widget-pills {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.theme-pill-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.theme-pill-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.theme-pill-btn.active {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(6, 182, 212, 0.3));
+  border-color: rgba(56, 189, 248, 0.55);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+}
+
+.cycle-pill-btn {
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  margin-left: 4px;
+  padding-left: 8px;
+}
+
+@media (max-width: 991px) {
+  .travel-theme-widget {
+    bottom: 80px;
+    left: 16px;
+    padding: 5px 8px;
+    max-width: calc(100vw - 32px);
+    overflow-x: auto;
+  }
+  .travel-widget-header span {
+    display: none;
+  }
+  .travel-widget-header {
+    padding-right: 6px;
+  }
+  .theme-pill-btn {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+  }
 }
 
 /* Typography Headings */

@@ -319,6 +319,19 @@
     updateDuration();
   }
 
+  // Destination typing dynamic theme detection
+  if (destInput) {
+    let debounceTimer;
+    destInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        if (window.autoDetectTravelTheme) {
+          window.autoDetectTravelTheme(destInput.value);
+        }
+      }, 350);
+    });
+  }
+
   // Preset pill clicks
   document.querySelectorAll('.preset-pill').forEach(pill => {
     pill.addEventListener('click', () => {
@@ -338,6 +351,10 @@
       returnDateInput.value = r.toISOString().split('T')[0];
       returnDateInput.min = startDateInput.value;
       updateDuration();
+
+      if (window.autoDetectTravelTheme) {
+        window.autoDetectTravelTheme(to);
+      }
 
       destInput.focus();
     });
