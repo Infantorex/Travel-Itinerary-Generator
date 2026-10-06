@@ -1,20 +1,30 @@
-from deep_translator import GoogleTranslator
+import os
+import sys
+import datetime
+import tempfile
+import requests
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_sitemapper import Sitemapper
-import bcrypt
-import requests
-import datetime
-import bard, os
-from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash, check_password_hash
+
+# Try importing bcrypt or deep-translator safely
+try:
+    from deep_translator import GoogleTranslator
+except Exception as e:
+    GoogleTranslator = None
+
+import bard
 
 # Load the environment variables
-load_dotenv()
+base_dir = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(base_dir, ".env"))
+
 api_key = os.environ.get("WEATHER_API_KEY")
 secret_key = os.environ.get("SECRET_KEY", "voyagr-travel-generator-secret-2026")
 
-# Initialize base directories for reliable template/static resolution on Vercel & local
-base_dir = os.path.dirname(os.path.abspath(__file__))
+# Initialize the Flask app
 app = Flask(
     __name__,
     template_folder=os.path.join(base_dir, 'templates'),
@@ -22,45 +32,45 @@ app = Flask(
 )
 sitemapper = Sitemapper(app=app) # Create and initialize the sitemapper
 
-# Database configuration: support DATABASE_URL, Vercel /tmp, or local SQLite
-is_vercel = bool(os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"))
+# Database configuration: support DATABASE_URL, or use tempfile SQLite for serverless/local
 database_url = os.environ.get("DATABASE_URL")
-
 if database_url:
-    # Handle postgres:// to postgresql:// for modern SQLAlchemy
     if database_url.startswith("postgres://"):
         database_url = database_url.replace("postgres://", "postgresql://", 1)
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-elif is_vercel:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/database.db'
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+    # Always writable on Windows, Linux, macOS, AWS Lambda, and Vercel
+    temp_db_path = os.path.join(tempfile.gettempdir(), 'voyagr_app.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{temp_db_path}'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
 app.secret_key = secret_key
+db = SQLAlchemy(app)
 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
 
     def __init__(self, name, email, password):
         self.name = name
         self.email = email
-        self.password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt()).decode('utf8')
+        self.password = generate_password_hash(password)
 
     def check_password(self, password):
-        return bcrypt.checkpw(password.encode('utf8'), self.password.encode('utf8'))
+        try:
+            return check_password_hash(self.password, password)
+        except Exception:
+            return False
 
 
 with app.app_context():
     try:
         db.create_all()
     except Exception as e:
-        print(f"DB init warning: {e}")
+        print(f"Database initialization notice: {e}")
 
 @app.after_request
 def add_csp_header(response):
@@ -128,15 +138,15 @@ def generate_fallback_weather_data(location: str, start_date: str, end_date: str
         "days": days_data
     }
 
-def get_weather_data(api_key: str, location: str, start_date: str, end_date: str) -> dict:
+def get_weather_data(key: str, location: str, start_date: str, end_date: str) -> dict:
     """
     Retrieves weather data from Visual Crossing Weather API for a given location and date range.
     Falls back gracefully if API key is not configured or call fails.
     """
-    if not api_key or api_key.strip() == "" or api_key.startswith("Your"):
+    if not key or key.strip() == "" or key.startswith("Your") or key.lower() == "placeholder":
         return generate_fallback_weather_data(location, start_date, end_date)
 
-    base_url = f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{location}/{start_date}/{end_date}?unitGroup=metric&include=days&key={api_key}&contentType=json"
+    base_url = f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{location}/{start_date}/{end_date}?unitGroup=metric&include=days&key={key}&contentType=json"
 
     try:
         response = requests.get(base_url, timeout=8)
@@ -181,10 +191,17 @@ def index():
         try:
             plan = bard.generate_itinerary(source, destination, start_date, end_date, no_of_day)
         except Exception as e:
-            flash("Error in generating the plan. Please try again later.", "danger")
-            return redirect(url_for("index"))
+            plan = bard.generate_fallback_itinerary(source, destination, start_date, end_date, no_of_day)
 
-        languages = GoogleTranslator().get_supported_languages(as_dict=True)
+        languages = {}
+        if GoogleTranslator:
+            try:
+                languages = GoogleTranslator().get_supported_languages(as_dict=True)
+            except Exception:
+                languages = {"english": "en", "hindi": "hi", "spanish": "es", "french": "fr", "german": "de", "tamil": "ta"}
+        else:
+            languages = {"english": "en", "hindi": "hi", "spanish": "es", "french": "fr", "german": "de", "tamil": "ta"}
+
         return render_template(
             "dashboard.html",
             source=source,
@@ -234,14 +251,15 @@ def api_translate():
         if not cleaned:
             return ""
         # 1. Try GoogleTranslator
-        try:
-            gt = GoogleTranslator(source="auto", target=target_lang)
-            if len(cleaned) <= 4500:
-                res = gt.translate(cleaned)
-                if res:
-                    return res
-        except Exception:
-            pass
+        if GoogleTranslator:
+            try:
+                gt = GoogleTranslator(source="auto", target=target_lang)
+                if len(cleaned) <= 4500:
+                    res = gt.translate(cleaned)
+                    if res:
+                        return res
+            except Exception:
+                pass
 
         # 2. Try Gemini translation if client configured
         try:
@@ -268,7 +286,6 @@ def api_translate():
 
     translated = translate_single_text(text)
     return jsonify({"translated_text": translated})
-
 
 
 @sitemapper.include()
@@ -337,12 +354,15 @@ def register():
 
 @app.route('/robots.txt')
 def robots():
-    return render_template('robots.txt')
+    return "User-agent: *\nAllow: /\nSitemap: /sitemap.xml\n", 200, {'Content-Type': 'text/plain'}
 
 
 @app.route("/sitemap.xml")
 def r_sitemap():
-    return sitemapper.generate()
+    try:
+        return sitemapper.generate()
+    except Exception:
+        return "<?xml version='1.0' encoding='UTF-8'?><urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'><url><loc>/</loc></url></urlset>", 200, {'Content-Type': 'application/xml'}
 
 
 @app.errorhandler(404)

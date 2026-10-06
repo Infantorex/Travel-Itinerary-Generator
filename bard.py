@@ -1,8 +1,13 @@
-from google import genai
 import os
 import datetime
 from pathlib import Path
 from dotenv import load_dotenv
+
+# Try importing google.genai safely
+try:
+    from google import genai
+except Exception as e:
+    genai = None
 
 # Load the environment variables from the project root even if cwd differs
 env_path = Path(__file__).resolve().with_name(".env")
@@ -14,11 +19,17 @@ _client = None
 
 def get_client():
     global _client
+    if genai is None:
+        return None
     if _client is None:
         key = os.environ.get("GEMINI_API_KEY") or api_key
-        if not key or key.strip() == "" or key.startswith("Your"):
+        if not key or key.strip() == "" or key.startswith("Your") or key.lower() == "placeholder":
             return None
-        _client = genai.Client(api_key=key)
+        try:
+            _client = genai.Client(api_key=key)
+        except Exception as e:
+            print(f"GenAI client init error: {e}")
+            return None
     return _client
 
 def generate_fallback_itinerary(source, destination, start_date, end_date, no_of_days):
@@ -79,11 +90,6 @@ Welcome to your tailor-made journey to **{destination}**! This curated itinerary
 """
     return itinerary_md
 
-# Google Search grounding tool
-grounding_tool = genai.types.Tool(
-    google_search=genai.types.GoogleSearch()
-)
-
 def generate_itinerary(source, destination, start_date, end_date, no_of_days):
     system_prompt = (
         "You are an expert travel planner specializing in Indian and international trips. "
@@ -103,6 +109,10 @@ def generate_itinerary(source, destination, start_date, end_date, no_of_days):
         client = get_client()
         if client is None:
             return generate_fallback_itinerary(source, destination, start_date, end_date, no_of_days)
+
+        grounding_tool = genai.types.Tool(
+            google_search=genai.types.GoogleSearch()
+        )
 
         response = client.models.generate_content(
             model="gemini-2.5-flash",
