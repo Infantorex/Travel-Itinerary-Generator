@@ -1,128 +1,144 @@
-# [Travel Itinerary Generator](https://sanjeev02.pythonanywhere.com)
-***
-
-[![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ff5f5f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/Sanjeev-Kumar78)
-[![GitHub license](https://img.shields.io/github/license/Sanjeev-Kumar78/Travel-Itinerary-Generator?style=for-the-badge)](LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/Sanjeev-Kumar78/Travel-Itinerary-Generator?style=for-the-badge)]()
-[![GitHub contributors](https://img.shields.io/github/contributors/Sanjeev-Kumar78/Travel-Itinerary-Generator?style=for-the-badge)]()
-[![GitHub last-commit](https://img.shields.io/github/last-commit/Sanjeev-Kumar78/Travel-Itinerary-Generator?style=for-the-badge)]()
-
-
-
-
-
-<img title="Travel-Itinerary-Generator" align='right' src="/static/logo.svg" alt="Travel Itinerary Generator Logo" width="150"/>
-
-Plan your dream trip effortlessly with the Travel Itinerary Generator! This powerful trip planner is your ultimate companion for crafting seamless travel experiences. Whether you're embarking on a road trip, city excursion, or overseas adventure, our tool simplifies the entire planning process.
-
-## Sample:
-https://github.com/Sanjeev-Kumar78/Travel-Itinerary-Generator/assets/62820550/d55374a9-41bd-4454-8c2b-4f037b1f010b
-
-
-
+# 🌍 Voyagr — AI Travel Itinerary Generator
 
 <p align="center">
-Make your travel dreams a reality. Start planning your next adventure with the Travel Itinerary Generator today!
+  <img title="Voyagr - AI Travel Itinerary Generator" src="/static/logo.svg" alt="Voyagr Logo" width="140"/>
 </p>
+
 <p align="center">
-<i>Explore, discover, and make every trip unforgettable.*</i>
+  <b>Plan your dream trips effortlessly with AI-powered personalized itineraries, real-time weather forecasting, dynamic translations, and instant PDF exports.</b>
 </p>
 
-## Table of Contents
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white" alt="Python Version"/>
+  <img src="https://img.shields.io/badge/Flask-3.1%2B-black.svg?style=for-the-badge&logo=flask&logoColor=white" alt="Flask"/>
+  <img src="https://img.shields.io/badge/AI-Google_GenAI-8E75B2.svg?style=for-the-badge&logo=google&logoColor=white" alt="Google GenAI"/>
+  <img src="https://img.shields.io/badge/License-Apache_2.0-green.svg?style=for-the-badge" alt="License"/>
+</p>
 
-- [Travel Itinerary Generator](#travel-itinerary-generator)
-  - [Sample:](#sample)
-  - [Table of Contents](#table-of-contents)
-  - [About](#about)
-  - [Limitations \& Future Work](#limitations--future-work)
-  - [Features](#features)
-  - [Requirements](#requirements)
-  - [Setup and Installation](#setup-and-installation)
-  - [API Keys](#api-keys)
-  - [Usage](#usage)
-  - [Screenshots](#screenshots)
-  - [License](#license)
+---
 
-## About
+## 📌 Table of Contents
 
-Travel Itinerary Generator is a computer program that empowers travelers to effortlessly create personalized travel itineraries. By considering users' interests, budgets, and travel dates, this application generates comprehensive lists of activities, attractions, and accommodations. Whether you're an experienced traveler or a novice, the Travel Itinerary Generator is your key to saving time and ensuring an enriching and well-rounded travel experience.
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Tech Stack](#-tech-stack)
+- [System Architecture](#-system-architecture)
+- [Prerequisites](#-prerequisites)
+- [Setup & Installation](#-setup--installation)
+- [Configuration (.env)](#-configuration-env)
+- [Usage Guide](#-usage-guide)
+- [Screenshots & UI](#-screenshots--ui)
+- [License](#-license)
 
-## Limitations & Future Work
-- The Travel Itinerary Generator works only based on the user's source and destination and time of travel.
+---
 
-***Future Work***
-- The Travel Itinerary Generator is not able to generate itineraries for multiple destinations.
-- The Travel Itinerary Generator is not able to suggest hotels and flights.
-- **Real-time Collaboration:** In an increasingly interconnected world, we plan to introduce real-time collaboration features. Users will be able to share their itineraries with travel companions or collaborators, making group travel planning an effortless and collaborative experience.
+## 🌟 Overview
 
-## Features
+**Voyagr (Travel Itinerary Generator)** is a modern, full-stack AI web application designed to eliminate the stress of trip planning. By combining **Google Gemini AI** and **Visual Crossing Weather API**, Voyagr crafts day-by-day itineraries tailored to your dates, origin, destination, and budget, complete with interactive translation, weather outlooks, and print-ready PDF downloads.
 
-- **Weather Forecast:** The Travel Itinerary Generator provides a weather forecast of the destination for the whole travel time.
-- **Travel Itinerary:** The Travel Itinerary Generator provides a travel itinerary for the whole travel time in an optimum budget.
-- **Translation:** The Travel Itinerary Generator provides an in-dashboard translation feature that translates the entire itinerary into the user's preferred language.
-## Requirements
+---
 
-- Python 3.11
-- Flask
-- Flask-SQLAlchemy
-- google-generativeai==0.2.2
-- deep_translator
+## 🚀 Key Features
 
-## Setup and Installation
+- 🧠 **AI-Powered Day-by-Day Itineraries:** Generates curated morning, afternoon, and evening activities with realistic budget estimates and local insider tips.
+- 🌤️ **Live Weather Forecasts:** Fetches accurate weather predictions for your travel dates and destination.
+- 🌐 **Multi-Language Translation:** Seamlessly translates generated travel plans into over a dozen languages on the fly using `deep-translator`.
+- 📄 **Export to PDF & Print:** One-click PDF generation and print formatting for offline travel access.
+- 🔒 **User Authentication:** Secure user registration, bcrypt hashed passwords, and session management with SQLite / SQLAlchemy.
+- 🎨 **Modern Glassmorphic UI:** Built with dark mode aesthetics, vibrant accents, smooth CSS transitions, and mobile responsiveness.
+- ⚡ **Offline & API Fallback Mode:** Built-in intelligent fallback itinerary engine ensures uninterrupted usability even without active API keys.
 
-1. Clone the repository:
+---
 
-   ```shell
-   https://github.com/Sanjeev-Kumar78/Travel-Itinerary-Generator.git
-   cd Travel-Itinerary-Generator
-2. Install required packages:
+## 🛠️ Tech Stack
 
-   ```shell
-   pip install -r requirements.txt
-   ```
+- **Backend:** Python 3.10+, Flask 3.1, Flask-SQLAlchemy, Werkzeug, Bcrypt
+- **AI & Data:** Google GenAI SDK (`google-genai`), Visual Crossing Weather API, Deep-Translator
+- **Database:** SQLite (SQLAlchemy ORM)
+- **Frontend:** HTML5, CSS3 (Modern Glassmorphism & Custom Properties), Vanilla JavaScript, FontAwesome 6, Bootstrap 5.3
+- **Tools & Utilities:** Python-Dotenv, Gunicorn, HTML2PDF, Markdown-it
 
-## API Keys
-- Visual Crossing Weather API Key: [Sign up](https://www.visualcrossing.com/weather-api) for a free account and get your API key.
-- Google Palm API: [Sign up](https://makersuite.google.com) for a free account and get your API key.
+---
 
-## Usage
-- Please follow the instructions below to run the application locally.
+## 📋 Prerequisites
 
-Write API keys: In a `.env` file.
-```shell
-WEATHER_API_KEY='Your Visual Crossing Weather API Key'
-GEMINI_API_KEY='Your Google Palm API Key'
+Make sure you have the following installed on your system:
+- **Python 3.10** or higher
+- **Git**
 
+---
+
+## ⚙️ Setup & Installation
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Infantorex/<YOUR-REPO-NAME>.git
+cd Travel-Itinerary-Generator-main
 ```
-and save it in the root directory of the project.
 
-Run the following command to start the application:
-```shell
+### 2. Create and Activate a Virtual Environment
+```bash
+# Windows (PowerShell / Command Prompt)
+python -m venv venv
+.\venv\Scripts\activate
+
+# macOS / Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 🔑 Configuration (.env)
+
+Create a `.env` file in the root directory of the project and add your API keys:
+
+```env
+# Google AI Studio API Key (https://aistudio.google.com/)
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Visual Crossing Weather API Key (https://www.visualcrossing.com/weather-api)
+WEATHER_API_KEY=your_weather_api_key_here
+
+# Flask Secret Key for session encryption
+SECRET_KEY=your_secure_random_secret_key
+```
+
+> [!TIP]
+> If `GEMINI_API_KEY` or `WEATHER_API_KEY` is not provided, the application will automatically activate its smart fallback generator so you can test the entire workflow offline.
+
+---
+
+## 💻 Usage Guide
+
+### Start the Application
+Run the application using:
+```bash
 python wsgi.py
 ```
+or
+```bash
+python app.py
+```
 
-## Screenshots
+Open your browser and visit:
+👉 **`http://127.0.0.1:5000`** (or `http://localhost:5000`)
 
-**Home Page of Travel Itinerary Generator without Login.**
-![image](https://github.com/Sanjeev-Kumar78/Travel-Itinerary-Generator/assets/62820550/a5e0f1c9-b0c4-4c1b-ba50-1a0b6c2a56bf)
+---
 
+## 📸 Screenshots & UI
 
-**Register Page / Sign Up**
-![image-1](https://github.com/Sanjeev-Kumar78/Travel-Itinerary-Generator/assets/62820550/2c2f90ff-c81d-48e6-a64f-ed71a1485cc8)
+| Landing & Itinerary Planner | Generated Itinerary View |
+|:---:|:---:|
+| Modern Glassmorphic Search UI | Day-wise plans, weather outlook & PDF export |
 
+---
 
-**Login Page**
-![image-2](https://github.com/Sanjeev-Kumar78/Travel-Itinerary-Generator/assets/62820550/7f50219b-546a-43d0-83bd-ca5d2262c261)
+## 📄 License
 
-
-**For Testing, I have taken Source Point as Varanasi & Destination as Mumbai, Starting Date of Journey: 06/11/2023, Return Date: 10/11/2023**
-![image-3](https://github.com/Sanjeev-Kumar78/Travel-Itinerary-Generator/assets/62820550/9b429e5a-722c-4d0c-ae39-b4e64440a34a)
-
-
-**Itinerary Page**
-![image-4](https://github.com/Sanjeev-Kumar78/Travel-Itinerary-Generator/assets/62820550/9f91a253-7ab8-4211-9b58-0a843cc66f0e)
-
-
-## License
-
-This project is licensed under the [Apache License 2.0](LICENSE) - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **Apache License 2.0** - see the [LICENSE](LICENSE) file for details.
